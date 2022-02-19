@@ -6,7 +6,7 @@ class OrderController {
   String? nameProduct;
   int? amount;
   String? filling;
-  int? value;
+  double? value;
   String? comments;
   bool? orderDelivered;
   String? createdAt;
@@ -32,9 +32,9 @@ class OrderController {
     deliveryDate = json['delivery_date'];
     deliveryTime = json['delivery_time'];
     nameProduct = json['name_product'];
-    amount = json['amount'];
+    amount = int.parse(json['amount'].toString());
     filling = json['filling'];
-    value = json['value'];
+    value = double.parse(json['value'].toString());
     comments = json['comments'];
     orderDelivered = json['order_delivered'];
     createdAt = json['created_at'];

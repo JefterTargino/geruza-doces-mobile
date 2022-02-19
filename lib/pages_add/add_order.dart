@@ -1,7 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hello_world/home_controller.dart';
+import 'package:http/http.dart' as http;
 //import 'package:flutter/services.dart';
 
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:select_form_field/select_form_field.dart';
+
+import '../models/OrderController.dart';
 
 class AddOrder extends StatefulWidget {
   const AddOrder({Key? key}) : super(key: key);
@@ -25,19 +33,87 @@ var maskValue = MaskTextInputFormatter(
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy);
 
-class _AddOrderState extends State<AddOrder> {
-  // Initial Selected Value
-  String dropdownvalue = '-';
+//
+final TextEditingController nameController = TextEditingController();
+final TextEditingController dateController = TextEditingController();
+final TextEditingController timeController = TextEditingController();
+final TextEditingController productController = TextEditingController();
+var amountController = TextEditingController();
+final TextEditingController fillingController = TextEditingController();
+var valueController = TextEditingController();
+final TextEditingController commentsController = TextEditingController();
+//
 
-  // List of items in our dropdown menu
-  var items = [
-    '-',
-    'Bolo de Glacê',
-    'Bolo de Pasta',
-    'Brigadeiro',
-    'Beijinho',
-    'Trufas',
+Future<OrderController> createOrder() async {
+  final response = await http.post(
+      (Uri.parse('https://geruza-doces-api.herokuapp.com/order/')),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "name_client": nameController.text,
+        "delivery_date": dateController.text,
+        "delivery_time": timeController.text,
+        "name_product": productController.text,
+        "amount": amountController.text,
+        "filling": fillingController.text,
+        "value": valueController.text,
+        "comments": commentsController.text,
+      }));
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    Fluttertoast.showToast(
+      backgroundColor: Color(0xFF35bb70),
+      msg: 'Pedido criado com sucesso!',
+    );
+    return OrderController.fromJson(jsonDecode(response.body));
+  } else {
+    Fluttertoast.showToast(
+        backgroundColor: Color(0xFFFFC02A),
+        msg: 'Por favor, preencher novamente!');
+    return createOrder();
+    // throw Exception();
+  }
+}
+
+class _AddOrderState extends State<AddOrder> {
+  late OrderController _order;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.clear();
+    dateController.clear();
+    timeController.clear();
+    productController.clear();
+    amountController.clear();
+    fillingController.clear();
+    valueController.clear();
+    commentsController.clear();
+  }
+
+  final List<Map<String, dynamic>> _items = [
+    {
+      'value': '-',
+      'label': '-',
+    },
+    {
+      'value': 'Bolo de Pasta',
+      'label': 'Bolo de Pasta',
+    },
+    {
+      'value': 'Brigadeiro',
+      'label': 'Brigadeiro',
+    },
+    {
+      'value': 'Beijinho',
+      'label': 'Beijinho',
+    },
+    {
+      'value': 'Trufas',
+      'label': 'Trufas',
+    },
   ];
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -60,6 +136,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: nameController,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                               hintText: 'Jennyffer Roberta',
@@ -87,6 +164,7 @@ class _AddOrderState extends State<AddOrder> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 5.0),
                               child: TextFormField(
+                                controller: dateController,
                                 inputFormatters: [maskDate],
                                 keyboardType: TextInputType.datetime,
                                 decoration: const InputDecoration(
@@ -108,6 +186,7 @@ class _AddOrderState extends State<AddOrder> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 1.0),
                               child: TextFormField(
+                                controller: timeController,
                                 inputFormatters: [maskTime],
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
@@ -130,25 +209,17 @@ class _AddOrderState extends State<AddOrder> {
                   ]),
                   Row(children: [
                     Flexible(
-                      flex: 5,
+                      flex: 6,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0, bottom: 25.0),
-                        child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.add_business_rounded),
-                            labelText: 'Produto',
-                          ),
-                          value: dropdownvalue,
-                          items: items.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownvalue = newValue!;
-                            });
+                        child: SelectFormField(
+                          type: SelectFormFieldType.dropdown,
+                          icon: Icon(Icons.add_business_rounded),
+                          labelText: 'Produto',
+                          controller: productController,
+                          items: _items,
+                          onChanged: (String newValue) {
+                            newValue = productController.text;
                           },
                           validator: (value) {
                             if (value == '-') {
@@ -157,21 +228,14 @@ class _AddOrderState extends State<AddOrder> {
                             return null;
                           },
                         ),
-                        // TextFormField(
-                        //   keyboardType: TextInputType.text,
-                        //   decoration: const InputDecoration(
-                        //       hintText: 'Bolo de Glacê',
-                        //       icon: Icon(Icons.add_business_rounded),
-                        //       labelText: 'Produto'),
-                        //   maxLength: 30,
-                        // ),
                       ),
                     ),
                     Flexible(
-                      flex: 5,
+                      flex: 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: amountController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                               hintText: '1',
@@ -193,6 +257,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: fillingController,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                               hintText: 'Chocolate com beijinho',
@@ -214,6 +279,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: valueController,
                           inputFormatters: [maskValue],
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
@@ -237,6 +303,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: commentsController,
                           maxLines: 2,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
@@ -257,11 +324,17 @@ class _AddOrderState extends State<AddOrder> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Tudo validado')),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //       content: Text('Pedido sendo criado')),
+                          // );
+                          final OrderController order = await createOrder();
+                          setState(() {
+                            _order = order;
+                          });
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text('Fazer pedido'),
