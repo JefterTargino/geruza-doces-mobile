@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:hello_world/models/ProductModel.dart';
 //import 'package:flutter/services.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../../models/OrderController.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -11,11 +15,52 @@ class AddProduct extends StatefulWidget {
 }
 
 var maskValue = MaskTextInputFormatter(
-    mask: '##.##',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy);
+    //mask: '##.##',
+    filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
+
+//
+final TextEditingController nameProductController = TextEditingController();
+var valueController = TextEditingController();
+final TextEditingController commentsController = TextEditingController();
+//
+
+Future<ProductModel> createProduct() async {
+  final response = await http.post(
+      (Uri.parse('https://geruza-doces-api.herokuapp.com/product/')),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "name_product": nameProductController.text,
+        "value": valueController.text,
+        "comments": commentsController.text,
+      }));
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    Fluttertoast.showToast(
+      backgroundColor: Color(0xFF35bb70),
+      msg: 'Produto cadastrado com sucesso!',
+    );
+    return ProductModel.fromJson(jsonDecode(response.body));
+  } else {
+    Fluttertoast.showToast(
+        backgroundColor: Color(0xFFFFC02A),
+        msg: 'Por favor, preencher novamente!');
+    return createProduct();
+    //throw Exception();
+  }
+}
 
 class _AddProductState extends State<AddProduct> {
+  late ProductModel _product;
+
+  @override
+  void initState() {
+    super.initState();
+    nameProductController.clear();
+    valueController.clear();
+    commentsController.clear();
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -36,6 +81,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: nameProductController,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                               hintText: 'Bolo de chocolate',
@@ -59,6 +105,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: valueController,
                           inputFormatters: [maskValue],
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
@@ -81,6 +128,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: commentsController,
                           maxLines: 2,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
@@ -101,11 +149,17 @@ class _AddProductState extends State<AddProduct> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Tudo validado')),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //       content: Text('Produto sendo cadastrado')),
+                          // );
+                          final ProductModel product = await createProduct();
+                          setState(() {
+                            _product = product;
+                          });
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text('Cadastrar pedido'),

@@ -9,8 +9,8 @@ import 'package:hello_world/home_controller.dart';
 import 'package:hello_world/view_order.dart';
 //import 'package:hello_world/home_controller.dart';
 
-import '../add_order.dart';
-import '../add_product.dart';
+import '../pages_add/add_order.dart';
+import '../pages_add/add_product.dart';
 import '../view_product.dart';
 import '../home_page.dart';
 

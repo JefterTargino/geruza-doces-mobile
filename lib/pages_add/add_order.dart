@@ -1,7 +1,16 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hello_world/home_controller.dart';
+import 'package:http/http.dart' as http;
 //import 'package:flutter/services.dart';
 
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:select_form_field/select_form_field.dart';
+
+import '../models/OrderController.dart';
 
 class AddOrder extends StatefulWidget {
   const AddOrder({Key? key}) : super(key: key);
@@ -21,23 +30,109 @@ var maskTime = MaskTextInputFormatter(
     type: MaskAutoCompletionType.lazy);
 
 var maskValue = MaskTextInputFormatter(
-    mask: '##.##',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy);
+    //mask: '##.##',
+    filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
+
+//
+final TextEditingController nameController = TextEditingController();
+final TextEditingController dateController = TextEditingController();
+final TextEditingController timeController = TextEditingController();
+final TextEditingController productController = TextEditingController();
+var amountController = TextEditingController();
+final TextEditingController fillingController = TextEditingController();
+var valueController = TextEditingController();
+final TextEditingController commentsController = TextEditingController();
+//
+late String selectedValueP;
+
+Future<OrderController> createOrder() async {
+  final response = await http.post(
+      (Uri.parse('https://geruza-doces-api.herokuapp.com/order/')),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "name_client": nameController.text,
+        "delivery_date": dateController.text,
+        "delivery_time": timeController.text,
+        "name_product": selectedValueP,
+        "amount": amountController.text,
+        "filling": fillingController.text,
+        "value": valueController.text,
+        "comments": commentsController.text,
+      }));
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    Fluttertoast.showToast(
+      backgroundColor: Color(0xFF35bb70),
+      msg: 'Pedido criado com sucesso!',
+    );
+    return OrderController.fromJson(jsonDecode(response.body));
+  } else {
+    Fluttertoast.showToast(
+        backgroundColor: Color(0xFFFFC02A),
+        msg: 'Por favor, preencher novamente!');
+    return createOrder();
+    // throw Exception();
+  }
+}
 
 class _AddOrderState extends State<AddOrder> {
-  // Initial Selected Value
-  String dropdownvalue = '-';
+  late OrderController _order;
 
-  // List of items in our dropdown menu
-  var items = [
-    '-',
-    'Bolo de Glacê',
-    'Bolo de Pasta',
-    'Brigadeiro',
-    'Beijinho',
-    'Trufas',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    nameController.clear();
+    dateController.clear();
+    timeController.clear();
+    productController.clear();
+    amountController.clear();
+    fillingController.clear();
+    valueController.clear();
+    commentsController.clear();
+    getListProducts();
+    selectedValueP = '';
+  }
+
+  //
+  List categoryItemList = [];
+
+  Future getListProducts() async {
+    var url = "https://geruza-doces-api.herokuapp.com/product/list";
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        categoryItemList = jsonData;
+      });
+    }
+    print(categoryItemList);
+  }
+
+  //
+  // final List<Map<String, dynamic>> _items = [
+  //   {
+  //     'value': '-',
+  //     'label': '-',
+  //   },
+  //   {
+  //     'value': 'Bolo de Pasta',
+  //     'label': 'Bolo de Pasta',
+  //   },
+  //   {
+  //     'value': 'Brigadeiro',
+  //     'label': 'Brigadeiro',
+  //   },
+  //   {
+  //     'value': 'Beijinho',
+  //     'label': 'Beijinho',
+  //   },
+  //   {
+  //     'value': 'Trufas',
+  //     'label': 'Trufas',
+  //   },
+  // ];
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -60,6 +155,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: nameController,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                               hintText: 'Jennyffer Roberta',
@@ -87,6 +183,7 @@ class _AddOrderState extends State<AddOrder> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 5.0),
                               child: TextFormField(
+                                controller: dateController,
                                 inputFormatters: [maskDate],
                                 keyboardType: TextInputType.datetime,
                                 decoration: const InputDecoration(
@@ -108,6 +205,7 @@ class _AddOrderState extends State<AddOrder> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 1.0),
                               child: TextFormField(
+                                controller: timeController,
                                 inputFormatters: [maskTime],
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
@@ -130,48 +228,68 @@ class _AddOrderState extends State<AddOrder> {
                   ]),
                   Row(children: [
                     Flexible(
-                      flex: 5,
+                      flex: 6,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, bottom: 25.0),
-                        child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.add_business_rounded),
-                            labelText: 'Produto',
+                          padding:
+                              const EdgeInsets.only(left: 5.0, bottom: 25.0),
+                          child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.add_business_rounded),
+                              labelText: 'Produto',
+                            ),
+                            isExpanded: true,
+                            //value: selectedValueP,
+                            items: categoryItemList.map((category) {
+                              return DropdownMenuItem(
+                                  value: category['name_product'],
+                                  child: Text(category['name_product']));
+                            }).toList(),
+                            onChanged: (value) {
+                              //value = productController.text;
+                              setState(() {
+                                selectedValueP = value.toString();
+                              });
+                            },
+                            validator: (value) {
+                              if (value == '-') {
+                                return 'Por favor, digite o produto';
+                              }
+                              return null;
+                            },
+                          )
+
+                          // SelectFormField(
+                          //   type: SelectFormFieldType.dropdown,
+                          //   icon: Icon(Icons.add_business_rounded),
+                          //   labelText: 'Produto',
+                          //   controller: productController,
+                          //   items: categoryItemList.map((category) =>
+                          //     DropdownMenuItem(
+                          //       value: category['name_product'],
+                          //       child: Text(category['name_product']
+                          //       )
+                          //       ).toList(),
+                          //   );
+                          //   onChanged:null,
+                          //   //_items,
+                          //   // onChanged: (String newValue) {
+                          //   //   newValue = productController.text;
+                          //   // },
+                          //   // validator: (value) {
+                          //   //   if (value == '-') {
+                          //   //     return 'Por favor, digite o produto';
+                          //   //   }
+                          //   //   return null;
+                          //   // },
+                          // ),
                           ),
-                          value: dropdownvalue,
-                          items: items.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownvalue = newValue!;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == '-') {
-                              return 'Por favor, digite o produto';
-                            }
-                            return null;
-                          },
-                        ),
-                        // TextFormField(
-                        //   keyboardType: TextInputType.text,
-                        //   decoration: const InputDecoration(
-                        //       hintText: 'Bolo de Glacê',
-                        //       icon: Icon(Icons.add_business_rounded),
-                        //       labelText: 'Produto'),
-                        //   maxLength: 30,
-                        // ),
-                      ),
                     ),
                     Flexible(
-                      flex: 5,
+                      flex: 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: amountController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                               hintText: '1',
@@ -193,6 +311,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: fillingController,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                               hintText: 'Chocolate com beijinho',
@@ -214,6 +333,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: valueController,
                           inputFormatters: [maskValue],
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
@@ -237,6 +357,7 @@ class _AddOrderState extends State<AddOrder> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          controller: commentsController,
                           maxLines: 2,
                           keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
@@ -257,11 +378,17 @@ class _AddOrderState extends State<AddOrder> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Tudo validado')),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //       content: Text('Pedido sendo criado')),
+                          // );
+                          final OrderController order = await createOrder();
+                          setState(() {
+                            _order = order;
+                          });
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text('Fazer pedido'),
