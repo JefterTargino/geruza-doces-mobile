@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hello_world/home_controller.dart';
@@ -29,9 +30,8 @@ var maskTime = MaskTextInputFormatter(
     type: MaskAutoCompletionType.lazy);
 
 var maskValue = MaskTextInputFormatter(
-    mask: '##.##',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy);
+    //mask: '##.##',
+    filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
 
 //
 final TextEditingController nameController = TextEditingController();
@@ -43,6 +43,7 @@ final TextEditingController fillingController = TextEditingController();
 var valueController = TextEditingController();
 final TextEditingController commentsController = TextEditingController();
 //
+late String selectedValueP;
 
 Future<OrderController> createOrder() async {
   final response = await http.post(
@@ -54,7 +55,7 @@ Future<OrderController> createOrder() async {
         "name_client": nameController.text,
         "delivery_date": dateController.text,
         "delivery_time": timeController.text,
-        "name_product": productController.text,
+        "name_product": selectedValueP,
         "amount": amountController.text,
         "filling": fillingController.text,
         "value": valueController.text,
@@ -89,30 +90,48 @@ class _AddOrderState extends State<AddOrder> {
     fillingController.clear();
     valueController.clear();
     commentsController.clear();
+    getListProducts();
+    selectedValueP = '';
   }
 
-  final List<Map<String, dynamic>> _items = [
-    {
-      'value': '-',
-      'label': '-',
-    },
-    {
-      'value': 'Bolo de Pasta',
-      'label': 'Bolo de Pasta',
-    },
-    {
-      'value': 'Brigadeiro',
-      'label': 'Brigadeiro',
-    },
-    {
-      'value': 'Beijinho',
-      'label': 'Beijinho',
-    },
-    {
-      'value': 'Trufas',
-      'label': 'Trufas',
-    },
-  ];
+  //
+  List categoryItemList = [];
+
+  Future getListProducts() async {
+    var url = "https://geruza-doces-api.herokuapp.com/product/list";
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        categoryItemList = jsonData;
+      });
+    }
+    print(categoryItemList);
+  }
+
+  //
+  // final List<Map<String, dynamic>> _items = [
+  //   {
+  //     'value': '-',
+  //     'label': '-',
+  //   },
+  //   {
+  //     'value': 'Bolo de Pasta',
+  //     'label': 'Bolo de Pasta',
+  //   },
+  //   {
+  //     'value': 'Brigadeiro',
+  //     'label': 'Brigadeiro',
+  //   },
+  //   {
+  //     'value': 'Beijinho',
+  //     'label': 'Beijinho',
+  //   },
+  //   {
+  //     'value': 'Trufas',
+  //     'label': 'Trufas',
+  //   },
+  // ];
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -211,24 +230,59 @@ class _AddOrderState extends State<AddOrder> {
                     Flexible(
                       flex: 6,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, bottom: 25.0),
-                        child: SelectFormField(
-                          type: SelectFormFieldType.dropdown,
-                          icon: Icon(Icons.add_business_rounded),
-                          labelText: 'Produto',
-                          controller: productController,
-                          items: _items,
-                          onChanged: (String newValue) {
-                            newValue = productController.text;
-                          },
-                          validator: (value) {
-                            if (value == '-') {
-                              return 'Por favor, digite o produto';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
+                          padding:
+                              const EdgeInsets.only(left: 5.0, bottom: 25.0),
+                          child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.add_business_rounded),
+                              labelText: 'Produto',
+                            ),
+                            isExpanded: true,
+                            //value: selectedValueP,
+                            items: categoryItemList.map((category) {
+                              return DropdownMenuItem(
+                                  value: category['name_product'],
+                                  child: Text(category['name_product']));
+                            }).toList(),
+                            onChanged: (value) {
+                              //value = productController.text;
+                              setState(() {
+                                selectedValueP = value.toString();
+                              });
+                            },
+                            validator: (value) {
+                              if (value == '-') {
+                                return 'Por favor, digite o produto';
+                              }
+                              return null;
+                            },
+                          )
+
+                          // SelectFormField(
+                          //   type: SelectFormFieldType.dropdown,
+                          //   icon: Icon(Icons.add_business_rounded),
+                          //   labelText: 'Produto',
+                          //   controller: productController,
+                          //   items: categoryItemList.map((category) =>
+                          //     DropdownMenuItem(
+                          //       value: category['name_product'],
+                          //       child: Text(category['name_product']
+                          //       )
+                          //       ).toList(),
+                          //   );
+                          //   onChanged:null,
+                          //   //_items,
+                          //   // onChanged: (String newValue) {
+                          //   //   newValue = productController.text;
+                          //   // },
+                          //   // validator: (value) {
+                          //   //   if (value == '-') {
+                          //   //     return 'Por favor, digite o produto';
+                          //   //   }
+                          //   //   return null;
+                          //   // },
+                          // ),
+                          ),
                     ),
                     Flexible(
                       flex: 4,

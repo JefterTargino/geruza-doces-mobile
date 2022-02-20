@@ -15,9 +15,8 @@ class AddProduct extends StatefulWidget {
 }
 
 var maskValue = MaskTextInputFormatter(
-    mask: '##.##',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy);
+    //mask: '##.##',
+    filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
 
 //
 final TextEditingController nameProductController = TextEditingController();
