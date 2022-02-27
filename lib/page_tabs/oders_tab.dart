@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:hello_world/view_order.dart';
+import 'package:hello_world/pages_view/view_order.dart';
 import '../pages_add/add_order.dart';
 import 'package:http/http.dart' as http; //
 import '../models/OrderController.dart'; //
