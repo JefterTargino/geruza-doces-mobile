@@ -3,6 +3,8 @@ import 'package:hello_world/home_controller.dart';
 
 import 'home_page.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -10,6 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       theme: tema.copyWith(
           colorScheme: tema.colorScheme.copyWith(
         primary: const Color.fromARGB(255, 255, 96, 90),
