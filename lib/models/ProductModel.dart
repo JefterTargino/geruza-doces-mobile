@@ -1,7 +1,7 @@
 class ProductModel {
   int? id;
   String? nameProduct;
-  double? value;
+  num? value;
   String? comments;
   String? createdAt;
   String? updatedAt;
@@ -17,7 +17,7 @@ class ProductModel {
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nameProduct = json['name_product'];
-    value = double.parse(json['value'].toString());
+    value = json['value'];
     comments = json['comments'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];

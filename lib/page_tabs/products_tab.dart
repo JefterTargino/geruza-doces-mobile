@@ -1,19 +1,7 @@
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-
 import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:hello_world/home_controller.dart';
-import 'package:hello_world/view_order.dart';
-//import 'package:hello_world/home_controller.dart';
-
-import '../pages_add/add_order.dart';
 import '../pages_add/add_product.dart';
-import '../view_product.dart';
-import '../home_page.dart';
-
+import '../pages_view/view_product.dart';
 import 'package:http/http.dart' as http; //
 import '../models/ProductModel.dart';
 import 'dart:convert'; //
@@ -30,6 +18,14 @@ class _ProductsTabState extends State<ProductsTab> {
   void initState() {
     super.initState();
     futureProduct = getProduct();
+  }
+
+  Future<void> _refresh() async {
+    var newList =
+        await Future.delayed(const Duration(seconds: 1), () => getProduct);
+    setState(() {
+      futureProduct = newList.call();
+    });
   }
 
   late Future<List<ProductModel>> futureProduct;
@@ -68,7 +64,7 @@ class _ProductsTabState extends State<ProductsTab> {
                                 height: 100,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Color(0xFF002D60),
+                                    color: const Color(0xFF002D60),
                                   ),
                                   borderRadius: BorderRadius.circular(
                                     10.0,
@@ -77,7 +73,7 @@ class _ProductsTabState extends State<ProductsTab> {
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     Text('Sem Produtos',
                                         style: TextStyle(
                                           fontSize: 15.0,
@@ -93,54 +89,59 @@ class _ProductsTabState extends State<ProductsTab> {
                             ),
                           );
                         } else {
-                          return GridView(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3),
-                            children: listProducts
-                                .map(
-                                  (ProductModel listProducts) => Card(
-                                    elevation: 5,
-                                    shadowColor:
-                                        const Color.fromARGB(255, 0, 0, 0),
-                                    color: const Color.fromARGB(
-                                        255, 238, 234, 234),
-                                    shape: RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                        color: Colors.grey,
+                          return RefreshIndicator(
+                            onRefresh: _refresh,
+                            child: GridView(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3),
+                              children: listProducts
+                                  .map(
+                                    (ProductModel listProducts) => Card(
+                                      elevation: 5,
+                                      shadowColor:
+                                          const Color.fromARGB(255, 0, 0, 0),
+                                      color: const Color.fromARGB(
+                                          255, 238, 234, 234),
+                                      shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                      borderRadius: BorderRadius.circular(10),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewProduct(
+                                                        id: listProducts.id!
+                                                            .toInt())),
+                                          );
+                                        },
+                                        child: //const Image(
+                                            //     image: NetworkImage(
+                                            //         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                                            //     color: const Color.fromRGBO(255, 255, 255, 0.5),
+                                            //     colorBlendMode: BlendMode.modulate)
+                                            Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                    '${listProducts.nameProduct}',
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                    ))),
+                                      ),
                                     ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ViewProduct()),
-                                        );
-                                      },
-                                      child: //const Image(
-                                          //     image: NetworkImage(
-                                          //         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                                          //     color: const Color.fromRGBO(255, 255, 255, 0.5),
-                                          //     colorBlendMode: BlendMode.modulate)
-                                          Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                  '${listProducts.nameProduct}',
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                  ))),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                                  )
+                                  .toList(),
+                            ),
                           );
                         } //else
                       } else if (snapshot.hasError) {
-                        return Center(
+                        return const Center(
                           child: Text('Erro ao carregar os pedidos'),
                           //Text('${snapshot.error}');
                         );
@@ -149,7 +150,7 @@ class _ProductsTabState extends State<ProductsTab> {
                         child: CircularProgressIndicator(),
                       );
                     }))),
-        Container(
+        SizedBox(
           width: 400,
           height: 600,
           child: Column(

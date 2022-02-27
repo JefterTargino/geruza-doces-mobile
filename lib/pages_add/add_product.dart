@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_world/models/ProductModel.dart';
-//import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import '../../models/OrderController.dart';
+import '../masks/masks.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -14,15 +12,9 @@ class AddProduct extends StatefulWidget {
   _AddProductState createState() => _AddProductState();
 }
 
-var maskValue = MaskTextInputFormatter(
-    //mask: '##.##',
-    filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
-
-//
 final TextEditingController nameProductController = TextEditingController();
 var valueController = TextEditingController();
 final TextEditingController commentsController = TextEditingController();
-//
 
 Future<ProductModel> createProduct() async {
   final response = await http.post(
@@ -32,21 +24,20 @@ Future<ProductModel> createProduct() async {
       },
       body: jsonEncode({
         "name_product": nameProductController.text,
-        "value": valueController.text,
+        "value": double.parse(valueController.text),
         "comments": commentsController.text,
       }));
   if (response.statusCode == 200 || response.statusCode == 201) {
     Fluttertoast.showToast(
-      backgroundColor: Color(0xFF35bb70),
+      backgroundColor: const Color(0xFF35bb70),
       msg: 'Produto cadastrado com sucesso!',
     );
     return ProductModel.fromJson(jsonDecode(response.body));
   } else {
     Fluttertoast.showToast(
-        backgroundColor: Color(0xFFFFC02A),
+        backgroundColor: const Color(0xFFFFC02A),
         msg: 'Por favor, preencher novamente!');
     return createProduct();
-    //throw Exception();
   }
 }
 

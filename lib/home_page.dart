@@ -1,22 +1,6 @@
-//import 'dart:math';
-
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:hello_world/home_controller.dart';
 import 'package:hello_world/page_tabs/third_guide.dart';
-import 'package:hello_world/view_order.dart';
-//import 'package:hello_world/home_controller.dart';
-
-import 'pages_add/add_order.dart';
-import 'pages_add/add_product.dart';
 import 'page_tabs/oders_tab.dart';
-import 'view_product.dart';
-
-import 'package:http/http.dart' as http; //
-import 'models/OrderController.dart'; //
-import 'dart:convert'; //
-
 import 'page_tabs/products_tab.dart'; //
 
 class HomePage extends StatefulWidget {
@@ -65,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             OdersTab(),
             ProductsTab(), // Segunda Aba
