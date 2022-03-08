@@ -150,32 +150,33 @@ class _AddOrderState extends State<AddOrder> {
                     Flexible(
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: 40,
-                            child: IconButton(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              alignment: Alignment.topLeft,
-                              onPressed: () => _selectDate(context),
-                              icon: const Icon(Icons.today),
-                              color: enableField == false
-                                  ? const Color.fromARGB(255, 121, 119, 119)
-                                  : const Color.fromARGB(255, 255, 96, 90),
-                            ),
-                          ),
+                          // SizedBox(
+                          //   width: 40,
+                          //   child: IconButton(
+                          //     padding: const EdgeInsets.only(left: 4.0),
+                          //     alignment: Alignment.topLeft,
+                          //     onPressed: () => _selectDate(context),
+                          //     icon: const Icon(Icons.today),
+                          //     color: enableField == false
+                          //         ? const Color.fromARGB(255, 121, 119, 119)
+                          //         : const Color.fromARGB(255, 255, 96, 90),
+                          //   ),
+                          // ),
                           Flexible(
-                            flex: 3,
+                            flex: 5,
                             child: Padding(
                               padding: const EdgeInsets.only(left: 5.0),
                               child: TextFormField(
-                                onTap: () {
-                                  setState(() {
-                                    enableField = !enableField;
-                                  });
-                                },
                                 controller: dateController,
                                 inputFormatters: [maskDate],
                                 keyboardType: TextInputType.datetime,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
+                                    icon: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        alignment: Alignment.topRight,
+                                        onPressed: () => _selectDate(context),
+                                        icon: const Icon(Icons.today)),
                                     hintText: 'dd/mm/aaaa',
                                     labelText: 'Data de entrega'),
                                 maxLength: 10,
@@ -189,7 +190,7 @@ class _AddOrderState extends State<AddOrder> {
                             ),
                           ),
                           Flexible(
-                            flex: 4,
+                            flex: 5,
                             child: TextFormField(
                               controller: timeController,
                               inputFormatters: [maskTime],
