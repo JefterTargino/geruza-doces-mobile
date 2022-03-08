@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:hello_world/pages_view/view_order.dart';
+import 'package:intl/intl.dart';
 import '../pages_add/add_order.dart';
 import 'package:http/http.dart' as http; //
 import '../models/OrderController.dart'; //
@@ -200,7 +201,7 @@ class _OdersTabState extends State<OdersTab> {
                                                           title: Text(
                                                               '${listOrders.nameClient}'),
                                                           subtitle: Text(
-                                                              'Pedido para ${listOrders.deliveryDate} às ${listOrders.deliveryTime}'),
+                                                              'Pedido para ${DateFormat.yMd('pt_BR').format(DateTime.tryParse(listOrders.deliveryDate.toString())!)} às ${listOrders.deliveryTime}'),
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:

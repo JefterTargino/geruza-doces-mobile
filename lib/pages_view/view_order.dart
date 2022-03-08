@@ -154,7 +154,10 @@ class _ViewOrderState extends State<ViewOrder> {
             if (snapshot.hasData) {
               nameController.text = '${snapshot.data!.nameClient}';
               if (enableField == false) {
-                dateController.text = '${snapshot.data!.deliveryDate}';
+                DateTime? dateConvert =
+                    DateTime.tryParse(snapshot.data!.deliveryDate.toString());
+                dateController.text =
+                    DateFormat.yMd('pt_BR').format(dateConvert!).toString();
               }
               timeController.text = '${snapshot.data!.deliveryTime}';
               //print('Valor selecionado: ${selectedValueP}');
@@ -205,22 +208,27 @@ class _ViewOrderState extends State<ViewOrder> {
                           Flexible(
                             child: Row(
                               children: [
-                                SizedBox(
-                                  width: 40,
-                                  child: IconButton(
-                                    padding: const EdgeInsets.only(left: 4.0),
-                                    alignment: Alignment.topLeft,
-                                    onPressed: () => _selectDate(context),
-                                    icon: const Icon(Icons.today),
-                                    color: enableField == false
-                                        ? const Color.fromARGB(
-                                            255, 121, 119, 119)
-                                        : const Color.fromARGB(
-                                            255, 255, 96, 90),
-                                  ),
-                                ),
+                                // SizedBox(
+                                //   width: 40,
+                                //   child: IconButton(
+                                //     padding: const EdgeInsets.only(left: 4.0),
+                                //     alignment: Alignment.topLeft,
+                                //     onPressed: enableField == false
+                                //         ? null
+                                //         : () => _selectDate(context),
+                                //     //onPressed: () => _selectDate(context),
+                                //     icon: const Icon(Icons.today),
+                                //     color: const Color.fromARGB(
+                                //         255, 121, 119, 119),
+                                //     // color: enableField == false
+                                //     //     ? const Color.fromARGB(
+                                //     //         255, 121, 119, 119)
+                                //     //     : const Color.fromARGB(
+                                //     //         255, 255, 96, 90),
+                                //   ),
+                                // ),
                                 Flexible(
-                                  flex: 3,
+                                  flex: 5,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
@@ -228,7 +236,16 @@ class _ViewOrderState extends State<ViewOrder> {
                                       keyboardType: TextInputType.datetime,
                                       controller: dateController,
                                       enabled: enableField,
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
+                                          icon: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              constraints:
+                                                  const BoxConstraints(),
+                                              alignment: Alignment.topRight,
+                                              onPressed: enableField == false
+                                                  ? null
+                                                  : () => _selectDate(context),
+                                              icon: const Icon(Icons.today)),
                                           hintText: 'dd/mm/aaaa',
                                           labelText: 'Data de entrega'),
                                       maxLength: 10,
