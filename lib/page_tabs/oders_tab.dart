@@ -299,6 +299,7 @@ class _OdersTabState extends State<OdersTab> {
                                                                                 });
                                                                                 updateOrder(listOrders.id!.toInt());
                                                                                 Navigator.pop(context);
+                                                                                _refresh();
                                                                               },
                                                                               child: const Text('Sim'),
                                                                             ),
