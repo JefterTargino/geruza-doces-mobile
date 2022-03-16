@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/models/ListModel.dart';
 import 'dart:async';
 import 'package:hello_world/pages_view/view_order.dart';
 import 'package:intl/intl.dart';
@@ -72,6 +73,22 @@ class _OdersTabState extends State<OdersTab> {
     setState(() {
       futureOrder = newList.call();
     });
+  }
+
+//Get de um pedido especifico
+  Future<OrderController> fetch(int id) async {
+    final response = await http
+        .get(Uri.parse('https://geruza-doces-api.herokuapp.com/order/$id'));
+    if (response.statusCode == 200) {
+      final teste = OrderController.fromJson(jsonDecode(response.body));
+      print(teste.listProduct!.map((e) => e.toJson()));
+      return teste;
+    } else {
+      _refresh();
+      return fetch(id);
+      //throw Exception(Fluttertoast.showToast(
+      //   backgroundColor: const Color(0xFFFFC02A), msg: response.body));
+    }
   }
 
   @override
@@ -155,6 +172,8 @@ class _OdersTabState extends State<OdersTab> {
                                                     onExpansionChanged:
                                                         (bool expanded) {
                                                       setState(() {
+                                                        // fetch(listOrders.id!
+                                                        //     .toInt());
                                                         expandedTile = expanded;
                                                       });
                                                     },
@@ -313,33 +332,78 @@ class _OdersTabState extends State<OdersTab> {
                                                       ],
                                                     ),
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Text(
-                                                                '${listOrders.amount}'),
-                                                          ),
-                                                          Text(
-                                                              '${listOrders.nameProduct}'),
-                                                        ],
-                                                      ),
-                                                      const Text('Observações:',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          '${listOrders.comments}',
-                                                          maxLines: 2,
-                                                        ),
-                                                      ),
+                                                      FutureBuilder<
+                                                              OrderController>(
+                                                          future: expandedTile ==
+                                                                  true
+                                                              ? fetch(listOrders
+                                                                  .id!
+                                                                  .toInt())
+                                                              : null,
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            if (snapshot
+                                                                .hasData) {
+                                                              return Column(
+                                                                children: [
+                                                                  ListView
+                                                                      .separated(
+                                                                          physics:
+                                                                              const NeverScrollableScrollPhysics(),
+                                                                          shrinkWrap:
+                                                                              true,
+                                                                          itemCount: snapshot
+                                                                              .data!
+                                                                              .listProduct!
+                                                                              .length,
+                                                                          separatorBuilder: (BuildContext context, int index) =>
+                                                                              Divider(),
+                                                                          itemBuilder:
+                                                                              (context, index) {
+                                                                            return ListTile(
+                                                                              style: ListTileStyle.drawer,
+                                                                              enabled: enableField,
+                                                                              contentPadding: const EdgeInsets.only(left: 5.0),
+                                                                              horizontalTitleGap: 0,
+                                                                              //leading:
+                                                                              //    const Icon(Icons.add_business_rounded),
+                                                                              title: Text(
+                                                                                '  Produto: ${snapshot.data!.listProduct![index].nameProduct}',
+                                                                                style: const TextStyle(color: Colors.black),
+                                                                              ),
+                                                                              subtitle: Text('  Quantidade: ${snapshot.data!.listProduct![index].amount}', style: const TextStyle(color: Colors.black)),
+                                                                            );
+                                                                          }),
+                                                                  const Text(
+                                                                      'Valor total:',
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold)),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                        'R\$ ${snapshot.data!.sum ?? '0,00'}'),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            } else if (snapshot
+                                                                .hasError) {
+                                                              return const Center(
+                                                                child: Text(
+                                                                    'Erro ao visualizar o pedido'),
+                                                              );
+                                                            }
+                                                            return const SizedBox(
+                                                              width: 100,
+                                                              height: 100,
+                                                              child: Center(
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
+                                                            );
+                                                          }),
                                                     ],
                                                   ),
                                                 ),

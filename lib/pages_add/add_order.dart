@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hello_world/pages_add/add_list_product.dart';
 import 'package:http/http.dart' as http;
 import '../models/OrderController.dart';
 import 'package:intl/intl.dart';
@@ -17,14 +18,9 @@ class AddOrder extends StatefulWidget {
 final TextEditingController nameController = TextEditingController();
 final TextEditingController dateController = TextEditingController();
 final TextEditingController timeController = TextEditingController();
-final TextEditingController productController = TextEditingController();
-final TextEditingController amountController = TextEditingController();
-final TextEditingController fillingController = TextEditingController();
-var valueController = TextEditingController();
-final TextEditingController commentsController = TextEditingController();
+final TextEditingController phoneController = TextEditingController();
 
 class _AddOrderState extends State<AddOrder> {
-  late String selectedValueP;
   bool enableField = false;
   Future<OrderController> createOrder() async {
     final response = await http.post(
@@ -36,11 +32,7 @@ class _AddOrderState extends State<AddOrder> {
           "name_client": nameController.text,
           "delivery_date": dateController.text,
           "delivery_time": timeController.text,
-          "name_product": selectedValueP,
-          "amount": int.parse(amountController.text),
-          "filling": fillingController.text,
-          "value": double.parse(valueController.text),
-          "comments": commentsController.text,
+          "phone": phoneController.text.toString().replaceAll(' ', ''),
         }));
     if (response.statusCode == 200 || response.statusCode == 201) {
       Fluttertoast.showToast(
@@ -84,27 +76,7 @@ class _AddOrderState extends State<AddOrder> {
     nameController.clear();
     dateController.clear();
     timeController.clear();
-    productController.clear();
-    amountController.clear();
-    fillingController.clear();
-    valueController.clear();
-    commentsController.clear();
-    getListProducts();
-    selectedValueP = '';
-  }
-
-  List categoryItemList = [];
-
-  Future getListProducts() async {
-    var url = "https://geruza-doces-api.herokuapp.com/product/list";
-    var response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body);
-      setState(() {
-        categoryItemList = jsonData;
-      });
-    }
-    //print(categoryItemList);
+    phoneController.clear();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -214,117 +186,20 @@ class _AddOrderState extends State<AddOrder> {
                   ]),
                   Row(children: [
                     Flexible(
-                      flex: 6,
-                      child: Padding(
-                          padding:
-                              const EdgeInsets.only(left: 5.0, bottom: 25.0),
-                          child: DropdownButtonFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.add_business_rounded),
-                              labelText: 'Produto',
-                            ),
-                            isExpanded: true,
-                            items: categoryItemList.map((category) {
-                              return DropdownMenuItem(
-                                  value: category['name_product'],
-                                  child: Text(category['name_product']));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedValueP = value.toString();
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Por favor, digite o produto';
-                              }
-                              return null;
-                            },
-                          )),
-                    ),
-                    Flexible(
-                      flex: 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
-                          controller: amountController,
+                          controller: phoneController,
+                          inputFormatters: [maskPhone],
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
-                              hintText: '1',
-                              icon: Icon(Icons.pin_outlined),
-                              labelText: 'Quantidade'),
-                          maxLength: 3,
+                              hintText: '84911223344',
+                              icon: Icon(Icons.phone_android),
+                              labelText: 'Celular'),
+                          maxLength: 13,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, digite a quantidade';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
-                  Row(children: [
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: TextFormField(
-                          controller: fillingController,
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: 'Chocolate com beijinho',
-                              icon: Icon(Icons.food_bank),
-                              labelText: 'Recheio'),
-                          maxLength: 30,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite algum recheio';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
-                  Row(children: [
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: TextFormField(
-                          controller: valueController,
-                          inputFormatters: [maskValue],
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                              prefixText: 'R\$ ',
-                              hintText: '35.00',
-                              icon: Icon(Icons.monetization_on),
-                              labelText: 'Valor'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite o valor do pedido';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
-                  Row(children: [
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: TextFormField(
-                          controller: commentsController,
-                          maxLines: 2,
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: 'Observações',
-                              icon: Icon(Icons.addchart),
-                              labelText: 'Observações'),
-                          maxLength: 70,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite alguma observação';
+                              return 'Por favor, digite o numero do telefone';
                             }
                             return null;
                           },
@@ -345,10 +220,15 @@ class _AddOrderState extends State<AddOrder> {
                           setState(() {
                             _order = order;
                           });
-                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewListProduct(id: order.id!.toInt())),
+                          );
                         }
                       },
-                      child: const Text('Fazer pedido'),
+                      child: const Text('Adicionar produtos'),
                     ),
                   )
                 ],
