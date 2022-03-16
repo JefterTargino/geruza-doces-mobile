@@ -13,3 +13,8 @@ var maskTime = MaskTextInputFormatter(
 var maskValue = MaskTextInputFormatter(
     //mask: '##.##',
     filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.lazy);
+
+var maskPhone = MaskTextInputFormatter(
+    mask: '## # ########',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy);

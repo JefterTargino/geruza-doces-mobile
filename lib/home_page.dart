@@ -13,55 +13,60 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 80,
-          backgroundColor: const Color.fromARGB(255, 255, 96, 90),
-          title: Row(children: const <Widget>[
-            // Image.network(
-            //   'https://i.ibb.co/gttqNTq/Geriza-dpces.png',
-            //   fit: BoxFit.contain,
-            //   width: 100.0,
-            //   height: 100.0,
-            // ),
-            Padding(
-              padding: EdgeInsets.only(left: 65),
-              child: Text('Geruza Doces'),
-            )
-          ]),
-          bottom: const TabBar(
-            tabs: <Widget>[
-              Tab(
-                icon: Icon(Icons.topic_rounded),
-                text: 'Pedidos',
-              ),
-              Tab(
-                icon: Icon(Icons.add_business_rounded),
-                text: 'Produtos',
-              ),
-              Tab(
-                icon: Icon(Icons.brightness_5_sharp),
-                text: 'Dados',
-              ),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: DefaultTabController(
+        initialIndex: 0,
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 80,
+            backgroundColor: const Color.fromARGB(255, 255, 96, 90),
+            title: Row(children: const <Widget>[
+              // Image.network(
+              //   'https://i.ibb.co/gttqNTq/Geriza-dpces.png',
+              //   fit: BoxFit.contain,
+              //   width: 100.0,
+              //   height: 100.0,
+              // ),
+              Padding(
+                padding: EdgeInsets.only(left: 65),
+                child: Text('Geruza Doces'),
+              )
+            ]),
+            bottom: const TabBar(
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(Icons.topic_rounded),
+                  text: 'Pedidos',
+                ),
+                Tab(
+                  icon: Icon(Icons.add_business_rounded),
+                  text: 'Produtos',
+                ),
+                Tab(
+                  icon: Icon(Icons.brightness_5_sharp),
+                  text: 'Dados',
+                ),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              OdersTab(),
+              ProductsTab(), // Segunda Aba
+              ThirdGuide(), // Terceira Aba
             ],
           ),
+          // floatingActionButton: FloatingActionButton(
+          //   child: Icon(Icons.add),
+          //   onPressed: () {setState(() {
+          //               counter++;
+          //             });},
+          // ),
         ),
-        body: const TabBarView(
-          children: [
-            OdersTab(),
-            ProductsTab(), // Segunda Aba
-            ThirdGuide(), // Terceira Aba
-          ],
-        ),
-        // floatingActionButton: FloatingActionButton(
-        //   child: Icon(Icons.add),
-        //   onPressed: () {setState(() {
-        //               counter++;
-        //             });},
-        // ),
       ),
     );
   }
