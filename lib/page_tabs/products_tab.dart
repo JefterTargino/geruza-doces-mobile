@@ -152,7 +152,7 @@ class _ProductsTabState extends State<ProductsTab> {
                     }))),
         SizedBox(
           width: 400,
-          height: 600,
+          height: 580,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,

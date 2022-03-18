@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_world/models/ProductModel.dart';
+import 'package:hello_world/pages_view/view_product.dart';
 import 'package:http/http.dart' as http;
 import '../masks/masks.dart';
 
@@ -150,7 +151,12 @@ class _AddProductState extends State<AddProduct> {
                           setState(() {
                             _product = product;
                           });
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewProduct(id: product.id!.toInt())),
+                          );
                         }
                       },
                       child: const Text('Cadastrar pedido'),

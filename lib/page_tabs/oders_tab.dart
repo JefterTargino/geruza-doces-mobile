@@ -50,6 +50,7 @@ class _OdersTabState extends State<OdersTab> {
     super.initState();
     futureOrder = getOrder();
     deliveredController.value;
+    getListProducts();
   }
 
   late Future<List<OrderController>> futureOrder;
@@ -89,6 +90,20 @@ class _OdersTabState extends State<OdersTab> {
       //throw Exception(Fluttertoast.showToast(
       //   backgroundColor: const Color(0xFFFFC02A), msg: response.body));
     }
+  }
+
+  List categoryItemList = [];
+
+  Future getListProducts() async {
+    var url = "https://geruza-doces-api.herokuapp.com/product/list";
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        categoryItemList = jsonData;
+      });
+    }
+    //print(categoryItemList);
   }
 
   @override
@@ -384,7 +399,7 @@ class _OdersTabState extends State<OdersTab> {
                                                                         const EdgeInsets.all(
                                                                             8.0),
                                                                     child: Text(
-                                                                        'R\$ ${snapshot.data!.sum ?? '0,00'}'),
+                                                                        'R\$ ${snapshot.data!.sum ?? '0.00'}'),
                                                                   ),
                                                                 ],
                                                               );
@@ -436,7 +451,7 @@ class _OdersTabState extends State<OdersTab> {
         ),
         SizedBox(
           width: 400,
-          height: 600,
+          height: 580,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -444,10 +459,16 @@ class _OdersTabState extends State<OdersTab> {
                 FloatingActionButton(
                   child: const Icon(Icons.add),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AddOrder()),
-                    );
+                    categoryItemList.isEmpty
+                        ? Fluttertoast.showToast(
+                            backgroundColor: const Color(0xFFFFC02A),
+                            msg: 'Sem produtos cadastrados!',
+                          )
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AddOrder()),
+                          );
                   },
                 ),
               ]),

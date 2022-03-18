@@ -162,8 +162,11 @@ class _ViewOrderState extends State<ViewOrder> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    const HomePage(indextTab: 0)));
         return false;
       },
       child: Scaffold(
@@ -318,6 +321,7 @@ class _ViewOrderState extends State<ViewOrder> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
                                 child: TextFormField(
+                                  enabled: enableField,
                                   controller: phoneController,
                                   inputFormatters: [maskPhone],
                                   keyboardType: TextInputType.number,
@@ -368,19 +372,45 @@ class _ViewOrderState extends State<ViewOrder> {
                                         TextButton(
                                           onPressed: () {
                                             //Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditListProduct(
-                                                        id: snapshot
-                                                            .data!
-                                                            .listProduct![index]
-                                                            .id!
-                                                            .toInt(),
-                                                        option: true,
-                                                      )),
-                                            );
+                                            print(snapshot
+                                                .data!
+                                                .listProduct![index]
+                                                .nameProduct);
+                                            // print(categoryItemList.any(
+                                            //     (element) =>
+                                            //         element['name_product'] ==
+                                            //         snapshot
+                                            //             .data!
+                                            //             .listProduct![index]
+                                            //             .nameProduct));
+
+                                            //categoryItemList.isEmpty
+                                            categoryItemList.any((element) =>
+                                                    element['name_product'] ==
+                                                    snapshot
+                                                        .data!
+                                                        .listProduct![index]
+                                                        .nameProduct)
+                                                ? Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            EditListProduct(
+                                                              id: snapshot
+                                                                  .data!
+                                                                  .listProduct![
+                                                                      index]
+                                                                  .id!
+                                                                  .toInt(),
+                                                              option: true,
+                                                            )),
+                                                  )
+                                                : Fluttertoast.showToast(
+                                                    backgroundColor:
+                                                        const Color(0xFFFFC02A),
+                                                    msg:
+                                                        'Produto não cadastrado, não possível alterar!',
+                                                  );
                                           },
                                           child: const Text('Alterar produto'),
                                         ),
@@ -407,7 +437,7 @@ class _ViewOrderState extends State<ViewOrder> {
                                 );
                               }),
                           Text(
-                              'Valor total: R\$ ${snapshot.data!.sum ?? '0,00'}',
+                              'Valor total: R\$ ${snapshot.data!.sum ?? '0.00'}',
                               style: const TextStyle(fontSize: 20)),
                           enableField == false
                               ? const Text('')
@@ -417,12 +447,20 @@ class _ViewOrderState extends State<ViewOrder> {
                                   iconSize: 30,
                                   //padding: const EdgeInsets.only(left: 10.0),
                                   onPressed: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewListProduct(
-                                              id: snapshot.data!.id!.toInt())),
-                                    );
+                                    categoryItemList.isEmpty
+                                        ? Fluttertoast.showToast(
+                                            backgroundColor:
+                                                const Color(0xFFFFC02A),
+                                            msg: 'Sem produtos cadastrados!',
+                                          )
+                                        : Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewListProduct(
+                                                        id: snapshot.data!.id!
+                                                            .toInt())),
+                                          );
                                     //if (_formKey.currentState!
                                     //    .validate()) {
                                     //  final ListModel listProduct =
@@ -500,18 +538,26 @@ class _ViewOrderState extends State<ViewOrder> {
                                                 child: const Text('Não'),
                                               ),
                                               TextButton(
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   deleteOrder(widget.id);
                                                   //Navigator.pop(context);
                                                   //Navigator.pop(context);
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          seconds: 1),
+                                                      () =>
+                                                          Navigator.of(context)
+                                                              .pop());
                                                   Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
+                                                  //Navigator.of(context).pop();
                                                   Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (BuildContext
                                                                   context) =>
-                                                              const HomePage()));
+                                                              const HomePage(
+                                                                  indextTab:
+                                                                      0)));
                                                 },
                                                 child: const Text('Sim'),
                                               ),
