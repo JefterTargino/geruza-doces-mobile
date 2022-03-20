@@ -112,7 +112,9 @@ class _EditListProductState extends State<EditListProduct> {
                 if (snapshot.hasData) {
                   if (productController.text.isEmpty) {
                     productController.text = '${snapshot.data!.nameProduct}';
-                  }
+                  } else {
+                    productController.text = '${snapshot.data!.nameProduct}';
+                  } //trocar esse else para colocar no value do drop
                   amountController.text = '${snapshot.data!.amount}';
                   fillingController.text = '${snapshot.data!.filling}';
                   commentsController.text = '${snapshot.data!.comments}';

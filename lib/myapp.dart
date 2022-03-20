@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         //secondary: Color.fromARGB(100, 255, 176, 110)
       )),
       home: HomeController(
-        child: const HomePage(),
+        child: const HomePage(indextTab: 0),
       ),
     );
   }
