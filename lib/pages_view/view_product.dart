@@ -18,8 +18,8 @@ class ViewProduct extends StatefulWidget {
 
 //Get de um produto especifico
 Future<ProductModel> fetchProductById(int id) async {
-  final response = await http
-      .get(Uri.parse('https://geruza-doces-api.herokuapp.com/product/$id'));
+  final response = await http.get(
+      Uri.parse('https://geruza-doces-api-final.herokuapp.com/product/$id'));
   if (response.statusCode == 200) {
     return ProductModel.fromJson(jsonDecode(response.body));
   } else {
@@ -35,7 +35,7 @@ final TextEditingController commentsController = TextEditingController();
 //Update de um produto
 Future<bool> updateProduct(int id) async {
   final response = await http.put(
-      Uri.parse('https://geruza-doces-api.herokuapp.com/product/$id'),
+      Uri.parse('https://geruza-doces-api-final.herokuapp.com/product/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -63,7 +63,7 @@ Future<bool> updateProduct(int id) async {
 //Delete de um produto
 Future<ProductModel> deleteProduct(int id) async {
   final response = await http.delete(
-    Uri.parse('https://geruza-doces-api.herokuapp.com/product/$id'),
+    Uri.parse('https://geruza-doces-api-final.herokuapp.com/product/$id'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

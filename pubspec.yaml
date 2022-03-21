@@ -41,6 +41,8 @@ dependencies:
   select_form_field: ^2.2.0
   fluttertoast: ^8.0.8
   intl: ^0.17.0
+  percent_indicator: ^4.0.0
+  pie_chart: ^5.1.0
 
 dev_dependencies:
   flutter_test:

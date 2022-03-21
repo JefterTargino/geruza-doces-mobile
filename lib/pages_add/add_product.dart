@@ -19,7 +19,7 @@ final TextEditingController commentsController = TextEditingController();
 
 Future<ProductModel> createProduct() async {
   final response = await http.post(
-      (Uri.parse('https://geruza-doces-api.herokuapp.com/product/')),
+      (Uri.parse('https://geruza-doces-api-final.herokuapp.com/product/')),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },

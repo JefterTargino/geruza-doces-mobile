@@ -20,7 +20,7 @@ final deliveredController = ValueNotifier<bool>(false);
 
 Future<bool> updateOrder(int id) async {
   final response = await http.put(
-      Uri.parse('https://geruza-doces-api.herokuapp.com/order/$id'),
+      Uri.parse('https://geruza-doces-api-final.herokuapp.com/order/$id'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -57,7 +57,7 @@ class _OdersTabState extends State<OdersTab> {
 
   Future<List<OrderController>> getOrder() async {
     final response = await http
-        .get((Uri.parse('https://geruza-doces-api.herokuapp.com/order')));
+        .get((Uri.parse('https://geruza-doces-api-final.herokuapp.com/order')));
     if (response.statusCode == 200) {
       final listOrder = (json.decode(response.body) as List)
           .map((e) => OrderController.fromJson(e))
@@ -78,8 +78,8 @@ class _OdersTabState extends State<OdersTab> {
 
 //Get de um pedido especifico
   Future<OrderController> fetch(int id) async {
-    final response = await http
-        .get(Uri.parse('https://geruza-doces-api.herokuapp.com/order/$id'));
+    final response = await http.get(
+        Uri.parse('https://geruza-doces-api-final.herokuapp.com/order/$id'));
     if (response.statusCode == 200) {
       final teste = OrderController.fromJson(jsonDecode(response.body));
       print(teste.listProduct!.map((e) => e.toJson()));
@@ -95,7 +95,7 @@ class _OdersTabState extends State<OdersTab> {
   List categoryItemList = [];
 
   Future getListProducts() async {
-    var url = "https://geruza-doces-api.herokuapp.com/product/list";
+    var url = "https://geruza-doces-api-final.herokuapp.com/product/list";
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);

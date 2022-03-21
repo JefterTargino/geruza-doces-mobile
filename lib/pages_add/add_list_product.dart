@@ -27,7 +27,7 @@ class ViewListProduct extends StatefulWidget {
 //Get de um pedido especifico
 Future<OrderController> fetchOrderById(int id) async {
   final response = await http
-      .get(Uri.parse('https://geruza-doces-api.herokuapp.com/order/$id'));
+      .get(Uri.parse('https://geruza-doces-api-final.herokuapp.com/order/$id'));
   if (response.statusCode == 200) {
     return OrderController.fromJson(jsonDecode(response.body));
   } else {
@@ -39,7 +39,7 @@ Future<OrderController> fetchOrderById(int id) async {
 //Delete de um pedido da lista
 Future<ListModel> deleteProduct(int id) async {
   final response = await http.delete(
-    Uri.parse('https://geruza-doces-api.herokuapp.com/listProduct/$id'),
+    Uri.parse('https://geruza-doces-api-final.herokuapp.com/listProduct/$id'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -67,7 +67,8 @@ class _ViewListProductState extends State<ViewListProduct> {
 
   Future<ListModel> createListProduct() async {
     final response = await http.post(
-        (Uri.parse('https://geruza-doces-api.herokuapp.com/listProduct/')),
+        (Uri.parse(
+            'https://geruza-doces-api-final.herokuapp.com/listProduct/')),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -109,7 +110,7 @@ class _ViewListProductState extends State<ViewListProduct> {
   List categoryItemList = [];
 
   Future getListProducts() async {
-    var url = "https://geruza-doces-api.herokuapp.com/product/list";
+    var url = "https://geruza-doces-api-final.herokuapp.com/product/list";
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
