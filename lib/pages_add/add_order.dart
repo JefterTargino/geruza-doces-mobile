@@ -24,7 +24,7 @@ class _AddOrderState extends State<AddOrder> {
   bool enableField = false;
   Future<OrderController> createOrder() async {
     final response = await http.post(
-        (Uri.parse('https://geruza-doces-api.herokuapp.com/order/')),
+        (Uri.parse('https://geruza-doces-api-final.herokuapp.com/order/')),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

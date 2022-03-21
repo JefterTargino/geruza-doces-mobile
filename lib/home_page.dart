@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
                   text: 'Produtos',
                 ),
                 Tab(
-                  icon: Icon(Icons.brightness_5_sharp),
-                  text: 'Dados',
+                  icon: Icon(Icons.bar_chart),
+                  text: 'Estatisticas ',
                 ),
               ],
             ),

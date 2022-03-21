@@ -31,8 +31,8 @@ class _ProductsTabState extends State<ProductsTab> {
   late Future<List<ProductModel>> futureProduct;
 
   Future<List<ProductModel>> getProduct() async {
-    final response = await http
-        .get((Uri.parse('https://geruza-doces-api.herokuapp.com/product')));
+    final response = await http.get(
+        (Uri.parse('https://geruza-doces-api-final.herokuapp.com/product')));
     if (response.statusCode == 200) {
       final listProduct = (json.decode(response.body) as List)
           .map((e) => ProductModel.fromJson(e))
