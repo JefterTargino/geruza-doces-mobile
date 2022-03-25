@@ -73,6 +73,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          textCapitalization: TextCapitalization.words,
                           controller: nameProductController,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
@@ -120,6 +121,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
+                          textCapitalization: TextCapitalization.words,
                           controller: commentsController,
                           maxLines: 2,
                           keyboardType: TextInputType.text,
@@ -128,12 +130,12 @@ class _AddProductState extends State<AddProduct> {
                               icon: Icon(Icons.addchart),
                               labelText: 'Descrição'),
                           maxLength: 70,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite a descrição do produto';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Por favor, digite a descrição do produto';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                     ),

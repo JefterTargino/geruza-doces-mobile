@@ -75,7 +75,7 @@ class _ViewListProductState extends State<ViewListProduct> {
         body: jsonEncode({
           "order_id": widget.id,
           "name_product": selectedValueP,
-          "amount": int.parse(amountController.text),
+          "amount": double.parse(amountController.text),
           "filling": fillingController.text,
           "comments": commentsController.text,
         }));
@@ -256,6 +256,8 @@ class _ViewListProductState extends State<ViewListProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.text,
                                       controller: fillingController,
                                       //enabled: enableField,
@@ -278,6 +280,8 @@ class _ViewListProductState extends State<ViewListProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.text,
                                       maxLines: 2,
                                       controller: commentsController,
@@ -477,6 +481,8 @@ class _ViewListProductState extends State<ViewListProduct> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 5.0),
                                       child: TextFormField(
+                                        textCapitalization:
+                                            TextCapitalization.words,
                                         keyboardType: TextInputType.text,
                                         controller: fillingController,
                                         //enabled: enableField,
@@ -499,6 +505,8 @@ class _ViewListProductState extends State<ViewListProduct> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 5.0),
                                       child: TextFormField(
+                                        textCapitalization:
+                                            TextCapitalization.words,
                                         keyboardType: TextInputType.text,
                                         maxLines: 2,
                                         controller: commentsController,
