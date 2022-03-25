@@ -187,6 +187,8 @@ class _EditListProductState extends State<EditListProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.text,
                                       controller: fillingController,
                                       //enabled: enableField,
@@ -209,6 +211,8 @@ class _EditListProductState extends State<EditListProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.text,
                                       maxLines: 2,
                                       controller: commentsController,

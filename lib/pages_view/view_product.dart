@@ -127,6 +127,8 @@ class _ViewProductState extends State<ViewProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.name,
                                       controller: nameController,
                                       enabled: enableField,
@@ -174,6 +176,8 @@ class _ViewProductState extends State<ViewProduct> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       keyboardType: TextInputType.text,
                                       maxLines: 2,
                                       controller: commentsController,
@@ -182,12 +186,12 @@ class _ViewProductState extends State<ViewProduct> {
                                           icon: Icon(Icons.addchart),
                                           labelText: 'Descrição'),
                                       maxLength: 70,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor, digite a descrição do produto';
-                                        }
-                                        return null;
-                                      },
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return 'Por favor, digite a descrição do produto';
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
                                 ),

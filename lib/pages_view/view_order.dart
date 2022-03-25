@@ -216,6 +216,7 @@ class _ViewOrderState extends State<ViewOrder> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
                                 child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
                                   keyboardType: TextInputType.name,
                                   controller: nameController,
                                   enabled: enableField,
@@ -330,12 +331,12 @@ class _ViewOrderState extends State<ViewOrder> {
                                       icon: Icon(Icons.phone_android),
                                       labelText: 'Celular'),
                                   maxLength: 13,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor, digite o numero do telefone';
-                                    }
-                                    return null;
-                                  },
+                                  // validator: (value) {
+                                  //   if (value == null || value.isEmpty) {
+                                  //     return 'Por favor, digite o numero do telefone';
+                                  //   }
+                                  //   return null;
+                                  // },
                                 ),
                               ),
                             ),

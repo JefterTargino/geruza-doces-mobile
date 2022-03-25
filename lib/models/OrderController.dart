@@ -62,7 +62,7 @@ class ListProduct {
   int? id;
   int? orderId;
   String? nameProduct;
-  int? amount;
+  num? amount;
   String? filling;
   num? value;
   String? comments;
