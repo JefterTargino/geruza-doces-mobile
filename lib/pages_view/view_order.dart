@@ -216,7 +216,8 @@ class _ViewOrderState extends State<ViewOrder> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
                                 child: TextFormField(
-                                  textCapitalization: TextCapitalization.words,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   keyboardType: TextInputType.name,
                                   controller: nameController,
                                   enabled: enableField,
