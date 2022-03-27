@@ -128,7 +128,7 @@ class _ViewProductState extends State<ViewProduct> {
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
                                       textCapitalization:
-                                          TextCapitalization.words,
+                                          TextCapitalization.sentences,
                                       keyboardType: TextInputType.name,
                                       controller: nameController,
                                       enabled: enableField,
@@ -177,7 +177,7 @@ class _ViewProductState extends State<ViewProduct> {
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: TextFormField(
                                       textCapitalization:
-                                          TextCapitalization.words,
+                                          TextCapitalization.sentences,
                                       keyboardType: TextInputType.text,
                                       maxLines: 2,
                                       controller: commentsController,

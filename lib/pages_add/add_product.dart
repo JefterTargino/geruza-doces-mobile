@@ -58,7 +58,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastrando pedido'),
+        title: const Text('Cadastrando produto'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -73,7 +73,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
-                          textCapitalization: TextCapitalization.words,
+                          textCapitalization: TextCapitalization.sentences,
                           controller: nameProductController,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
@@ -121,7 +121,7 @@ class _AddProductState extends State<AddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: TextFormField(
-                          textCapitalization: TextCapitalization.words,
+                          textCapitalization: TextCapitalization.sentences,
                           controller: commentsController,
                           maxLines: 2,
                           keyboardType: TextInputType.text,
