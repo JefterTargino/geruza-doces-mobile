@@ -71,7 +71,7 @@ class _EditListProductState extends State<EditListProduct> {
     fetchListProductById(widget.id);
     selectedValueP = '';
     getListProducts();
-    //productController.clear();
+    productController.clear();
   }
 
   List categoryItemList = [];
@@ -112,9 +112,10 @@ class _EditListProductState extends State<EditListProduct> {
                 if (snapshot.hasData) {
                   if (productController.text.isEmpty) {
                     productController.text = '${snapshot.data!.nameProduct}';
-                  } else {
-                    productController.text = '${snapshot.data!.nameProduct}';
-                  } //trocar esse else para colocar no value do drop
+                  }
+                  //else {
+                  //productController.text = '${snapshot.data!.nameProduct}';
+                  //} //trocar esse else para colocar no value do drop
                   amountController.text = '${snapshot.data!.amount}';
                   fillingController.text = '${snapshot.data!.filling}';
                   commentsController.text = '${snapshot.data!.comments}';
@@ -195,13 +196,13 @@ class _EditListProductState extends State<EditListProduct> {
                                       decoration: const InputDecoration(
                                           icon: Icon(Icons.food_bank),
                                           labelText: 'Recheio'),
-                                      maxLength: 30,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor, digite algum recheio';
-                                        }
-                                        return null;
-                                      },
+                                      maxLength: 70,
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return 'Por favor, digite algum recheio';
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
                                 ),
@@ -221,12 +222,12 @@ class _EditListProductState extends State<EditListProduct> {
                                           icon: Icon(Icons.addchart),
                                           labelText: 'Observações'),
                                       maxLength: 70,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor, digite alguma observação';
-                                        }
-                                        return null;
-                                      },
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return 'Por favor, digite alguma observação';
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
                                 ),

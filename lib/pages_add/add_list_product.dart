@@ -264,13 +264,13 @@ class _ViewListProductState extends State<ViewListProduct> {
                                       decoration: const InputDecoration(
                                           icon: Icon(Icons.food_bank),
                                           labelText: 'Recheio'),
-                                      maxLength: 30,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor, digite algum recheio';
-                                        }
-                                        return null;
-                                      },
+                                      maxLength: 70,
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return 'Por favor, digite algum recheio';
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
                                 ),
@@ -290,12 +290,12 @@ class _ViewListProductState extends State<ViewListProduct> {
                                           icon: Icon(Icons.addchart),
                                           labelText: 'Observações'),
                                       maxLength: 70,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor, digite alguma observação';
-                                        }
-                                        return null;
-                                      },
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return 'Por favor, digite alguma observação';
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
                                 ),
@@ -489,13 +489,13 @@ class _ViewListProductState extends State<ViewListProduct> {
                                         decoration: const InputDecoration(
                                             icon: Icon(Icons.food_bank),
                                             labelText: 'Recheio'),
-                                        maxLength: 30,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Por favor, digite algum recheio';
-                                          }
-                                          return null;
-                                        },
+                                        maxLength: 70,
+                                        // validator: (value) {
+                                        //   if (value == null || value.isEmpty) {
+                                        //     return 'Por favor, digite algum recheio';
+                                        //   }
+                                        //   return null;
+                                        // },
                                       ),
                                     ),
                                   ),
@@ -515,12 +515,12 @@ class _ViewListProductState extends State<ViewListProduct> {
                                             icon: Icon(Icons.addchart),
                                             labelText: 'Observações'),
                                         maxLength: 70,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Por favor, digite alguma observação';
-                                          }
-                                          return null;
-                                        },
+                                        // validator: (value) {
+                                        //   if (value == null || value.isEmpty) {
+                                        //     return 'Por favor, digite alguma observação';
+                                        //   }
+                                        //   return null;
+                                        // },
                                       ),
                                     ),
                                   ),

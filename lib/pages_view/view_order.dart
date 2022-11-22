@@ -374,10 +374,10 @@ class _ViewOrderState extends State<ViewOrder> {
                                         TextButton(
                                           onPressed: () {
                                             //Navigator.pop(context);
-                                            print(snapshot
-                                                .data!
-                                                .listProduct![index]
-                                                .nameProduct);
+                                            // print do produto a ser alterado print(snapshot
+                                            //     .data!
+                                            //     .listProduct![index]
+                                            //     .nameProduct);
                                             // print(categoryItemList.any(
                                             //     (element) =>
                                             //         element['name_product'] ==

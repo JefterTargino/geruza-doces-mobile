@@ -82,7 +82,7 @@ class _OdersTabState extends State<OdersTab> {
         Uri.parse('https://geruza-doces-api-final.herokuapp.com/order/$id'));
     if (response.statusCode == 200) {
       final teste = OrderController.fromJson(jsonDecode(response.body));
-      print(teste.listProduct!.map((e) => e.toJson()));
+      // print de todos os fetch print(teste.listProduct!.map((e) => e.toJson()));
       return teste;
     } else {
       _refresh();
